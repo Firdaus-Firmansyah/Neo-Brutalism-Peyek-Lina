@@ -1,0 +1,73 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+/* ========================================= */
+/* NEO-BRUTALISM MOBILE RESPONSIVE OVERRIDES */
+/* ========================================= */
+@media (max-width: 768px) {
+  /* GLOBAL PADDINGS */
+  [style*="padding: 80px"],
+  [style*="padding: 64px 80px"],
+  [style*="padding: 40px 80px"],
+  [style*="padding: 32px 36px"],
+  [style*="padding: 16px 36px"],
+  [style*="padding: 20px 80px"],
+  .px-8 {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* GRID TO STACK (1 Column) */
+  [style*="grid-template-columns"],
+  [style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* NAVBAR WRAP */
+  nav {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 16px !important;
+  }
+  nav .flex.items-center.gap-8 {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+
+  /* HERO SECTION FONT SIZES */
+  [style*="fontSize: 4.5rem"],
+  [style*="font-size: 4.5rem"] {
+    font-size: 2.8rem !important;
+  }
+  [style*="fontSize: 3rem"],
+  [style*="font-size: 3rem"] {
+    font-size: 2rem !important;
+  }
+  
+  /* ADMIN LAYOUT: Flex Row to Column */
+  [style*="min-height: 100vh"],
+  [style*="minHeight: 100vh"] {
+    flex-direction: column !important;
+  }
+
+  /* ADMIN SIDEBAR */
+  [style*="width: 280px"] {
+    width: 100% !important;
+    min-height: auto !important;
+    position: relative !important;
+    height: auto !important;
+  }
+
+  /* ADMIN TABLES (Scrollable) */
+  [style*="overflow: hidden"] {
+    overflow-x: auto !important;
+  }
+  
+  /* FORCE BUTTONS TO FIT */
+  button {
+    white-space: normal !important;
+    height: auto !important;
+  }
+}
