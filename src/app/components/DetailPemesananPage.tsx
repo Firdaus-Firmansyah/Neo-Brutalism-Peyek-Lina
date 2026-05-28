@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { motion } from "motion/react";
 
-interface DetailPemesananPageProps {
-  onNavigate: (page: string) => void;
-}
+import { useNavigate } from "react-router";
+import { useCart } from "../contexts/CartContext";
 
 type PaymentMethod = "QRIS" | "TRANSFER_BANK" | "E_WALLET";
 
@@ -27,28 +27,9 @@ const DISCOUNT_CODES: Record<string, number> = {
   HEMAT20: 36000,
 };
 
-export function DetailPemesananPage({ onNavigate }: DetailPemesananPageProps) {
-  const [items, setItems] = useState(() => {
-    const saved = localStorage.getItem("cartItems");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // ignore
-      }
-    }
-    return [
-      {
-        id: 1,
-        name: "PEYEK KACANG ORIGINAL",
-        variant: "500gr",
-        price: PRODUCT_PRICE,
-        qty: 2,
-        image:
-          "/product-1.png",
-      },
-    ];
-  });
+export function DetailPemesananPage() {
+  const navigate = useNavigate();
+  const { cartItems: items } = useCart();
 
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("QRIS");
   const [promoCode, setPromoCode] = useState("");
@@ -81,7 +62,7 @@ export function DetailPemesananPage({ onNavigate }: DetailPemesananPageProps) {
   const handleSubmit = () => {
     if (formData.nama && formData.whatsapp && formData.alamat) {
       localStorage.setItem("hasOrder", "true");
-      onNavigate("konfirmasi");
+      navigate("/konfirmasi");
     } else {
       alert("⚠️ Harap lengkapi Nama, WhatsApp, dan Alamat Pengiriman!");
     }
@@ -96,8 +77,11 @@ export function DetailPemesananPage({ onNavigate }: DetailPemesananPageProps) {
   if (submitted) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#FDFBF7", fontFamily: "'Space Grotesk', sans-serif" }}>
-        <Navbar currentPage="detail" onNavigate={onNavigate} />
-        <div
+        <Navbar />
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
           style={{
             display: "flex",
             alignItems: "center",
@@ -139,7 +123,7 @@ export function DetailPemesananPage({ onNavigate }: DetailPemesananPageProps) {
               CEK WHATSAPP KAMU UNTUK DETAIL PEMBAYARAN
             </p>
             <button
-              onClick={() => onNavigate("keranjang")}
+              onClick={() => navigate("/keranjang")}
               style={{
                 marginTop: "32px",
                 backgroundColor: "#FF8C00",
@@ -157,19 +141,24 @@ export function DetailPemesananPage({ onNavigate }: DetailPemesananPageProps) {
               KEMBALI KE BERANDA →
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "#FDFBF7", fontFamily: "'Space Grotesk', sans-serif" }}>
-      <Navbar currentPage="detail" onNavigate={onNavigate} cartCount={items.reduce((s: number, i: any) => s + i.qty, 0)} />
+      <Navbar />
 
-      <div style={{ maxWidth: "1440px", margin: "0 auto", padding: "48px 80px" }}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        style={{ maxWidth: "1440px", margin: "0 auto", padding: "48px 80px" }}
+      >
         {/* Back Button */}
         <button
-          onClick={() => onNavigate("keranjang")}
+          onClick={() => navigate("/keranjang")}
           style={{
             display: "flex",
             alignItems: "center",
@@ -742,7 +731,7 @@ export function DetailPemesananPage({ onNavigate }: DetailPemesananPageProps) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

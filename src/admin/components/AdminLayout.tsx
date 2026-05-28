@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Bell, User, CheckCircle2, ShoppingBag, AlertTriangle } from "lucide-react";
 import { AdminSidebar } from "./AdminSidebar";
 import type { AdminPage } from "../types";
+import { motion } from "motion/react";
 
 interface AdminLayoutProps {
   currentPage: AdminPage;
@@ -220,7 +221,14 @@ export function AdminLayout({
 
         {/* Content */}
         <main style={{ flex: 1, padding: "32px 36px" }}>
-          {children}
+          <motion.div
+            key={currentPage}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            {children}
+          </motion.div>
         </main>
       </div>
     </div>

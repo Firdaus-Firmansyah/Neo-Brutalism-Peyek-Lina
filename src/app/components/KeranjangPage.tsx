@@ -2,39 +2,14 @@ import { useState, useEffect } from "react";
 import { Trash2, Minus, Plus, ArrowLeft, ShoppingBag, Tag } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { motion } from "motion/react";
 
-interface KeranjangPageProps {
-  onNavigate: (page: string) => void;
-}
+import { useNavigate } from "react-router";
+import { useCart } from "../contexts/CartContext";
 
-const PRODUCT_PRICE = 90000;
-
-export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
-  const [items, setItems] = useState(() => {
-    const saved = localStorage.getItem("cartItems");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        // ignore
-      }
-    }
-    return [
-      {
-        id: 1,
-        name: "PEYEK KACANG ORIGINAL",
-        variant: "500gr",
-        price: PRODUCT_PRICE,
-        qty: 2,
-        image:
-          "/product-1.png",
-      },
-    ];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(items));
-  }, [items]);
+export function KeranjangPage() {
+  const navigate = useNavigate();
+  const { cartItems: items, updateQty, removeFromCart } = useCart();
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
   const shipping = 15000;
@@ -42,20 +17,6 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
 
   const formatRp = (n: number) =>
     "Rp " + n.toLocaleString("id-ID");
-
-  const updateQty = (id: number, delta: number) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, qty: Math.max(1, item.qty + delta) }
-          : item
-      )
-    );
-  };
-
-  const removeItem = (id: number) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  };
 
   return (
     <div
@@ -81,12 +42,17 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
           box-shadow: 2px 2px 0px #000 !important;
         }
       `}</style>
-      <Navbar currentPage="keranjang" onNavigate={onNavigate} cartCount={items.reduce((s, i) => s + i.qty, 0)} />
+      <Navbar />
 
-      <div style={{ maxWidth: "1440px", margin: "0 auto", padding: "48px 80px" }}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        style={{ maxWidth: "1440px", margin: "0 auto", padding: "48px 80px" }}
+      >
         {/* Back button */}
         <button
-          onClick={() => onNavigate("menu")}
+          onClick={() => navigate("/menu")}
           style={{
             display: "flex",
             alignItems: "center",
@@ -174,7 +140,7 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
               Belum ada produk di keranjang kamu.
             </p>
             <button
-              onClick={() => onNavigate("menu")}
+              onClick={() => navigate("/menu")}
               style={{
                 marginTop: "32px",
                 backgroundColor: "#FF8C00",
@@ -296,7 +262,7 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
                         }}
                       >
                         <button
-                          onClick={() => updateQty(item.id, -1)}
+                          onClick={() => updateQty(item.id, item.variant, -1)}
                           className="neo-btn-qty"
                           style={{
                             width: "48px",
@@ -330,7 +296,7 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
                           {item.qty}
                         </div>
                         <button
-                          onClick={() => updateQty(item.id, 1)}
+                          onClick={() => updateQty(item.id, item.variant, 1)}
                           className="neo-btn-qty"
                           style={{
                             width: "48px",
@@ -369,7 +335,7 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
 
                   {/* Delete Button */}
                   <button
-                    onClick={() => removeItem(item.id)}
+                    onClick={() => removeFromCart(item.id, item.variant)}
                     style={{
                       backgroundColor: "#fff",
                       border: "3px solid #000",
@@ -392,7 +358,7 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
 
               {/* Continue Shopping */}
               <button
-                onClick={() => onNavigate("menu")}
+                onClick={() => navigate("/menu")}
                 style={{
                   border: "3px solid #000",
                   backgroundColor: "#FDFBF7",
@@ -531,7 +497,7 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
 
                   {/* CTA */}
                   <button
-                    onClick={() => onNavigate("verifikasi")}
+                    onClick={() => navigate("/verifikasi")}
                     className="neo-btn-hover"
                     style={{
                       backgroundColor: "#FF8C00",
@@ -560,7 +526,7 @@ export function KeranjangPage({ onNavigate }: KeranjangPageProps) {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

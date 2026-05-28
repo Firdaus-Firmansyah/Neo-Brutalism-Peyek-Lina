@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Star, ChevronDown, ChevronUp, Truck, Shield, Flame, Award, CheckCircle } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-
-interface HomePageProps {
-  onNavigate: (page: string) => void;
-}
+import { motion } from "motion/react";
+import { useNavigate } from "react-router";
+import { useCart } from "../contexts/CartContext";
 
 const PRODUCTS = [
   {
@@ -112,9 +111,12 @@ const FAQS = [
   },
 ];
 
-export function HomePage({ onNavigate }: HomePageProps) {
+export function HomePage() {
   const [ongkirInput, setOngkirInput] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  
+  const navigate = useNavigate();
+  const { cartCount } = useCart();
 
   const formatRp = (n: number) => "Rp " + n.toLocaleString("id-ID");
 
@@ -143,7 +145,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
           box-shadow: 2px 2px 0px #000 !important;
         }
       `}</style>
-      <Navbar currentPage="home" onNavigate={onNavigate} />
+      <Navbar />
 
       {/* Marquee Promo */}
       <div style={{ backgroundColor: "#FFE000", color: "#000", padding: "12px 0", overflow: "hidden", borderBottom: "4px solid #000" }}>
@@ -160,18 +162,15 @@ export function HomePage({ onNavigate }: HomePageProps) {
           HERO SECTION
       ═══════════════════════════════════════════════════════ */}
       <section
-        style={{
-          maxWidth: "1440px",
-          margin: "0 auto",
-          padding: "80px 80px 60px",
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "60px",
-          alignItems: "center",
-        }}
+        className="max-w-[1440px] mx-auto px-6 py-10 md:px-[80px] md:pt-[80px] md:pb-[60px] grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-[60px] items-center"
       >
         {/* LEFT: Text */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           {/* Badge */}
           <div
             style={{
@@ -292,14 +291,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 whiteSpace: "nowrap",
                 boxShadow: "4px 4px 0px #000",
               }}
-              onClick={() => onNavigate("menu")}
+              onClick={() => navigate("/menu")}
             >
               CEK ONGKIR & PESAN →
             </button>
           </div>
 
           {/* Stats Row */}
-          <div style={{ display: "flex", gap: "32px", marginTop: "40px" }}>
+          <div className="flex flex-wrap gap-6 md:gap-[32px] mt-8 md:mt-[40px]">
             {[
               { num: "5.000+", label: "PELANGGAN" },
               { num: "4.9★", label: "RATING" },
@@ -335,10 +334,16 @@ export function HomePage({ onNavigate }: HomePageProps) {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* RIGHT: Image + Floating Cards */}
-        <div style={{ position: "relative" }}>
+        <motion.div 
+          style={{ position: "relative" }}
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+        >
           {/* Main Hero Image */}
           <div
             style={{
@@ -370,15 +375,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
           {/* Floating Card 1 – Pesanan Masuk */}
           <div
+            className="absolute -top-4 -left-4 md:-top-[24px] md:-left-[40px] p-3 md:p-[14px_20px] min-w-[150px] md:min-w-[180px] bg-[#FDFBF7]"
             style={{
-              position: "absolute",
-              top: "-24px",
-              left: "-40px",
-              backgroundColor: "#FDFBF7",
               border: "3px solid #000",
               boxShadow: "6px 6px 0px #000",
-              padding: "14px 20px",
-              minWidth: "180px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -416,15 +416,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
           {/* Floating Card 2 – Sedang Digoreng */}
           <div
+            className="absolute bottom-[20%] -left-4 md:bottom-[30%] md:-left-[56px] p-3 md:p-[14px_20px] min-w-[160px] md:min-w-[190px] bg-[#FF8C00]"
             style={{
-              position: "absolute",
-              bottom: "30%",
-              left: "-56px",
-              backgroundColor: "#FF8C00",
               border: "3px solid #000",
               boxShadow: "6px 6px 0px #000",
-              padding: "14px 20px",
-              minWidth: "190px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -462,15 +457,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
           {/* Floating Card 3 – Meluncur */}
           <div
+            className="absolute -bottom-4 -right-4 md:-bottom-[24px] md:-right-[32px] p-3 md:p-[14px_20px] min-w-[160px] md:min-w-[190px] bg-black"
             style={{
-              position: "absolute",
-              bottom: "-24px",
-              right: "-32px",
-              backgroundColor: "#000",
               border: "3px solid #000",
               boxShadow: "6px 6px 0px #FF8C00",
-              padding: "14px 20px",
-              minWidth: "190px",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -505,26 +495,21 @@ export function HomePage({ onNavigate }: HomePageProps) {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════
           FEATURES BAR
       ═══════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          maxWidth: "1440px",
-          margin: "0 auto",
-          padding: "0 80px 80px",
-        }}
-      >
-        <div
+      <section className="max-w-[1440px] mx-auto px-6 pb-12 md:px-[80px] md:pb-[80px]">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="grid grid-cols-1 md:grid-cols-3 border-4 border-black overflow-hidden"
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            border: "4px solid #000",
             boxShadow: "8px 8px 0px #000",
-            overflow: "hidden",
           }}
         >
           {[
@@ -552,13 +537,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
           ].map((feat, i) => (
             <div
               key={feat.title}
+              className={`p-6 md:p-[40px_36px] flex flex-col sm:flex-row items-start gap-4 md:gap-[20px] ${i < 2 ? 'border-b-4 md:border-b-0 md:border-r-4 border-black' : ''}`}
               style={{
                 backgroundColor: feat.bg,
-                padding: "40px 36px",
-                borderRight: i < 2 ? "4px solid #000" : "none",
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "20px",
               }}
             >
               <div
@@ -601,28 +582,15 @@ export function HomePage({ onNavigate }: HomePageProps) {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ═══════════════════════════════════════════════════════
           BEST SELLER GRID
       ═══════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          maxWidth: "1440px",
-          margin: "0 auto",
-          padding: "0 80px 80px",
-        }}
-      >
+      <section className="max-w-[1440px] mx-auto px-6 pb-12 md:px-[80px] md:pb-[80px]">
         {/* Section Header */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            marginBottom: "48px",
-          }}
-        >
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8 md:mb-[48px]">
           <div>
             <div
               style={{
@@ -660,7 +628,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
           </div>
           <button
             className="neo-btn-hover"
-            onClick={() => onNavigate("menu")}
+            onClick={() => navigate("/menu")}
             style={{
               border: "3px solid #000",
               boxShadow: "4px 4px 0px #000",
@@ -679,15 +647,13 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
 
         {/* Product Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)",
-            gap: "24px",
-          }}
-        >
-          {PRODUCTS.map((product) => (
-            <div
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-[24px]">
+          {PRODUCTS.map((product, idx) => (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: idx * 0.1 }}
               key={product.id}
               style={{
                 border: "4px solid #000",
@@ -697,7 +663,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 cursor: "pointer",
                 transition: "transform 0.15s, box-shadow 0.15s",
               }}
-              onClick={() => onNavigate("menu")}
+              onClick={() => navigate("/menu")}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLDivElement).style.transform = "translate(-3px, -3px)";
                 (e.currentTarget as HTMLDivElement).style.boxShadow = "11px 11px 0px #000";
@@ -759,7 +725,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   {product.name}
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "16px" }}>
-                  {[1,2,3,4,5].map((s) => (
+                  {[1, 2, 3, 4, 5].map((s) => (
                     <Star key={s} size={12} fill="#FF8C00" color="#FF8C00" />
                   ))}
                   <span style={{ fontWeight: 700, fontSize: "0.75rem", color: "#666", marginLeft: "4px" }}>
@@ -786,7 +752,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onNavigate("menu");
+                      navigate("/menu");
                     }}
                     style={{
                       width: "48px",
@@ -805,7 +771,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -813,17 +779,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
       {/* ═══════════════════════════════════════════════════════
           PROMO BANNER
       ═══════════════════════════════════════════════════════ */}
-      <section style={{ padding: "0 80px 80px", maxWidth: "1440px", margin: "0 auto" }}>
+      <section className="px-6 pb-12 md:px-[80px] md:pb-[80px] max-w-[1440px] mx-auto">
         <div
+          className="p-8 md:p-[64px_80px] grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-8 md:gap-[60px] items-center bg-[#FF8C00]"
           style={{
-            backgroundColor: "#FF8C00",
             border: "4px solid #000",
             boxShadow: "10px 10px 0px #000",
-            padding: "64px 80px",
-            display: "grid",
-            gridTemplateColumns: "1fr auto",
-            gap: "60px",
-            alignItems: "center",
           }}
         >
           {/* Left Text */}
@@ -886,7 +847,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               HEMAT Rp 90.000!
             </p>
             <button
-              onClick={() => onNavigate("menu")}
+              onClick={() => navigate("/menu")}
               style={{
                 backgroundColor: "#000",
                 border: "4px solid #000",
@@ -970,13 +931,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
       {/* ═══════════════════════════════════════════════════════
           REVIEWS
       ═══════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          maxWidth: "1440px",
-          margin: "0 auto",
-          padding: "0 80px 80px",
-        }}
-      >
+      <section className="max-w-[1440px] mx-auto px-6 pb-12 md:px-[80px] md:pb-[80px]">
         {/* Header */}
         <div style={{ marginBottom: "40px" }}>
           <div
@@ -1016,14 +971,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
 
         {/* Review Cards */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "32px",
-            alignItems: "start",
-          }}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-[32px] items-start">
           {REVIEWS.map((review, i) => (
             <div
               key={review.id}
@@ -1115,21 +1063,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
       {/* ═══════════════════════════════════════════════════════
           FAQ
       ═══════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          maxWidth: "1440px",
-          margin: "0 auto",
-          padding: "0 80px 80px",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "340px 1fr",
-            gap: "60px",
-            alignItems: "start",
-          }}
-        >
+      <section className="max-w-[1440px] mx-auto px-6 pb-12 md:px-[80px] md:pb-[80px]">
+        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-10 md:gap-[60px] items-start">
           {/* Left: Title */}
           <div>
             <div
@@ -1173,7 +1108,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               membantu kamu!
             </p>
             <button
-              onClick={() => {}}
+              onClick={() => { }}
               style={{
                 marginTop: "24px",
                 backgroundColor: "#2E8B57",
@@ -1264,7 +1199,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      <Footer onNavigate={onNavigate} />
+      <Footer />
     </div>
   );
 }

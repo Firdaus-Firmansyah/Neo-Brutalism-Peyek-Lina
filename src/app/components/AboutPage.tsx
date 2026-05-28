@@ -2,10 +2,8 @@ import { Award, Heart, Leaf, Users, ChevronRight } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-
-interface AboutPageProps {
-  onNavigate: (page: string) => void;
-}
+import { motion } from "motion/react";
+import { useNavigate } from "react-router";
 
 const MILESTONES = [
   { year: "1985", title: "LAHIRNYA RESEP", desc: "Ibu Lina menciptakan resep peyek kacang pertamanya di dapur kecil Yogyakarta." },
@@ -45,7 +43,8 @@ const VALUES = [
   },
 ];
 
-export function AboutPage({ onNavigate }: AboutPageProps) {
+export function AboutPage() {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -54,12 +53,16 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
         fontFamily: "'Space Grotesk', sans-serif",
       }}
     >
-      <Navbar currentPage="about" onNavigate={onNavigate} />
+      <Navbar />
 
       {/* ═══════════════════════════════════════════════════════
           HERO / ABOUT SECTION
       ═══════════════════════════════════════════════════════ */}
-      <section
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
           maxWidth: "1440px",
           margin: "0 auto",
@@ -148,7 +151,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
 
           {/* CTA Button */}
           <button
-            onClick={() => onNavigate("menu")}
+            onClick={() => navigate("/menu")}
             style={{
               backgroundColor: "#FF8C00",
               border: "4px solid #000",
@@ -307,12 +310,16 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             </button>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ═══════════════════════════════════════════════════════
           TIMELINE / MILESTONES
       ═══════════════════════════════════════════════════════ */}
-      <section
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
           backgroundColor: "#000",
           padding: "80px 0",
@@ -425,12 +432,16 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ═══════════════════════════════════════════════════════
           OUR VALUES
       ═══════════════════════════════════════════════════════ */}
-      <section
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
           maxWidth: "1440px",
           margin: "0 auto",
@@ -535,12 +546,16 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             </div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* ═══════════════════════════════════════════════════════
           CTA BAND
       ═══════════════════════════════════════════════════════ */}
-      <section
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
           maxWidth: "1440px",
           margin: "80px auto 0",
@@ -587,7 +602,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             </p>
           </div>
           <button
-            onClick={() => onNavigate("menu")}
+            onClick={() => navigate("/menu")}
             style={{
               backgroundColor: "#FF8C00",
               border: "4px solid #000",
@@ -615,9 +630,9 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             PESAN SEKARANG →
           </button>
         </div>
-      </section>
+      </motion.section>
 
-      <Footer onNavigate={onNavigate} />
+      <Footer />
     </div>
   );
 }

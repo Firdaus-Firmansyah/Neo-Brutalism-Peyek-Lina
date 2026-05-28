@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { motion } from "motion/react";
 
 interface AdminLoginProps {
   onLogin: () => void;
@@ -58,16 +59,21 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
       <div style={{ position: "absolute", top: "40%", left: "5%", width: "16px", height: "16px", backgroundColor: "#000", opacity: 0.3 }} />
 
       {/* Login Card */}
-      <div style={{
-        backgroundColor: "#FDFBF7",
-        border: "4px solid #000",
-        boxShadow: "12px 12px 0px #000",
-        padding: "48px 52px",
-        width: "100%",
-        maxWidth: "480px",
-        position: "relative",
-        zIndex: 10,
-      }}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        style={{
+          backgroundColor: "#FDFBF7",
+          border: "4px solid #000",
+          boxShadow: "12px 12px 0px #000",
+          padding: "48px 52px",
+          width: "100%",
+          maxWidth: "480px",
+          position: "relative",
+          zIndex: 10,
+        }}
+      >
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
           <div style={{
@@ -226,7 +232,7 @@ export function AdminLogin({ onLogin }: AdminLoginProps) {
         }}>
           🔒 HANYA UNTUK ADMIN TERDAFTAR
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -1,8 +1,10 @@
 import { CheckCircle2, MessageCircle } from "lucide-react";
 import { Navbar } from "./Navbar";
+import { motion } from "motion/react";
+
+import { useNavigate } from "react-router";
 
 interface KonfirmasiPesananPageProps {
-  onNavigate: (page: string) => void;
   orderData?: {
     invoiceNo?: string;
     customerName?: string;
@@ -11,7 +13,8 @@ interface KonfirmasiPesananPageProps {
   };
 }
 
-export function KonfirmasiPesananPage({ onNavigate, orderData }: KonfirmasiPesananPageProps) {
+export function KonfirmasiPesananPage({ orderData }: KonfirmasiPesananPageProps) {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -20,10 +23,13 @@ export function KonfirmasiPesananPage({ onNavigate, orderData }: KonfirmasiPesan
         fontFamily: "'Space Grotesk', sans-serif",
       }}
     >
-      <Navbar currentPage="home" onNavigate={onNavigate} />
+      <Navbar />
 
       {/* Main Content */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         style={{
           display: "flex",
           alignItems: "center",
@@ -165,7 +171,7 @@ export function KonfirmasiPesananPage({ onNavigate, orderData }: KonfirmasiPesan
           {/* Action Buttons */}
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             <button
-              onClick={() => onNavigate("home")}
+              onClick={() => navigate("/")}
               style={{
                 backgroundColor: "#FF8C00",
                 border: "4px solid #000",
@@ -192,7 +198,7 @@ export function KonfirmasiPesananPage({ onNavigate, orderData }: KonfirmasiPesan
             </button>
 
             <button
-              onClick={() => onNavigate("status-pesanan")}
+              onClick={() => navigate("/status-pesanan")}
               style={{
                 backgroundColor: "transparent",
                 border: "3px solid rgba(255,255,255,0.6)",
@@ -217,7 +223,7 @@ export function KonfirmasiPesananPage({ onNavigate, orderData }: KonfirmasiPesan
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

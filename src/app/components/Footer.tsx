@@ -1,10 +1,9 @@
 import { Instagram, MessageCircle, Mail } from "lucide-react";
 
-interface FooterProps {
-  onNavigate?: (page: string) => void;
-}
+import { useNavigate } from "react-router";
 
-export function Footer({ onNavigate }: FooterProps) {
+export function Footer() {
+  const navigate = useNavigate();
   return (
     <footer
       style={{
@@ -15,14 +14,7 @@ export function Footer({ onNavigate }: FooterProps) {
       }}
     >
       <div
-        style={{
-          maxWidth: "1440px",
-          margin: "0 auto",
-          padding: "64px 80px 40px",
-          display: "grid",
-          gridTemplateColumns: "1.5fr 1fr 1fr 1fr",
-          gap: "48px",
-        }}
+        className="max-w-[1440px] mx-auto px-6 pt-12 pb-8 md:px-[80px] md:pt-[64px] md:pb-[40px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10 md:gap-[48px]"
       >
         {/* Brand */}
         <div>
@@ -32,7 +24,7 @@ export function Footer({ onNavigate }: FooterProps) {
               cursor: "pointer",
               display: "inline-block",
             }}
-            onClick={() => onNavigate?.("home")}
+            onClick={() => navigate("/")}
           >
             <img src="/logo.svg" alt="Peyek Lina Logo" style={{ height: "120px", objectFit: "contain" }} />
           </div>
@@ -92,14 +84,14 @@ export function Footer({ onNavigate }: FooterProps) {
             NAVIGASI
           </p>
           {[
-            { label: "Beranda", page: "home" },
-            { label: "Menu Produk", page: "menu" },
-            { label: "Tentang Kami", page: "about" },
-            { label: "Keranjang", page: "keranjang" },
+            { label: "Beranda", path: "/" },
+            { label: "Menu Produk", path: "/menu" },
+            { label: "Tentang Kami", path: "/about" },
+            { label: "Keranjang", path: "/keranjang" },
           ].map((link) => (
             <button
-              key={link.page}
-              onClick={() => onNavigate?.(link.page)}
+              key={link.path}
+              onClick={() => navigate(link.path)}
               style={{
                 display: "block",
                 background: "none",
@@ -142,7 +134,7 @@ export function Footer({ onNavigate }: FooterProps) {
           ].map((p) => (
             <button
               key={p}
-              onClick={() => onNavigate?.("menu")}
+              onClick={() => navigate("/menu")}
               style={{
                 display: "block",
                 background: "none",

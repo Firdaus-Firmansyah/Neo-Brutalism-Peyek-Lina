@@ -1,19 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageCircle, ArrowLeft, CheckCircle2, RefreshCw } from "lucide-react";
 import { Navbar } from "./Navbar";
+import { motion } from "motion/react";
 
-interface VerifikasiPageProps {
-  onNavigate: (page: string) => void;
-}
+import { useNavigate } from "react-router";
 
-export function VerifikasiPage({ onNavigate }: VerifikasiPageProps) {
-  const [items] = useState(() => {
-    const saved = localStorage.getItem("cartItems");
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) { /* ignore */ }
-    }
-    return [{ qty: 2 }];
-  });
+export function VerifikasiPage() {
+  const navigate = useNavigate();
 
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [verified, setVerified] = useState(false);
@@ -50,7 +43,7 @@ export function VerifikasiPage({ onNavigate }: VerifikasiPageProps) {
   const handleVerify = () => {
     if (otp.every((d) => d !== "")) {
       setVerified(true);
-      setTimeout(() => onNavigate("detail"), 1500);
+      setTimeout(() => navigate("/detail"), 1500);
     }
   };
 
@@ -72,9 +65,12 @@ export function VerifikasiPage({ onNavigate }: VerifikasiPageProps) {
           "repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 41px)",
       }}
     >
-      <Navbar currentPage="verifikasi" onNavigate={onNavigate} cartCount={items.reduce((s: number, i: any) => s + (i.qty || 0), 0)} />
+      <Navbar />
 
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
         style={{
           display: "flex",
           alignItems: "center",
@@ -133,7 +129,7 @@ export function VerifikasiPage({ onNavigate }: VerifikasiPageProps) {
         >
           {/* Back button */}
           <button
-            onClick={() => onNavigate("keranjang")}
+            onClick={() => navigate("/keranjang")}
             style={{
               position: "absolute",
               top: "20px",
@@ -291,8 +287,8 @@ export function VerifikasiPage({ onNavigate }: VerifikasiPageProps) {
                         index === 0 && !digit
                           ? "#2E8B57"
                           : digit
-                          ? "#FF8C00"
-                          : "#FDFBF7",
+                            ? "#FF8C00"
+                            : "#FDFBF7",
                       fontFamily: "'Archivo Black', sans-serif",
                       fontSize: "3rem",
                       textAlign: "center",
@@ -405,7 +401,7 @@ export function VerifikasiPage({ onNavigate }: VerifikasiPageProps) {
             </>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

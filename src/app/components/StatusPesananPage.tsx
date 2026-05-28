@@ -1,14 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowLeft, Package, Truck, CheckCircle2, RefreshCw,
   Copy, MessageCircle, ShoppingBag, MapPin, Phone, User,
 } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { motion } from "motion/react";
 
-interface StatusPesananPageProps {
-  onNavigate: (page: string) => void;
-}
+import { useNavigate } from "react-router";
 
 type OrderStatus = "dikirim" | "diterima";
 
@@ -49,7 +48,8 @@ const archivoBold = (size: string, color = "#000"): React.CSSProperties => ({
   lineHeight: 1.1,
 });
 
-export function StatusPesananPage({ onNavigate }: StatusPesananPageProps) {
+export function StatusPesananPage() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState<OrderStatus>("dikirim");
   const [copied, setCopied] = useState(false);
 
@@ -107,12 +107,17 @@ export function StatusPesananPage({ onNavigate }: StatusPesananPageProps) {
           box-shadow: 2px 2px 0px #000 !important;
         }
       `}</style>
-      <Navbar currentPage="pesanan" onNavigate={onNavigate} cartCount={2} />
+      <Navbar />
 
-      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "36px 24px 60px" }}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        style={{ maxWidth: "1100px", margin: "0 auto", padding: "36px 24px 60px" }}
+      >
         {/* Back */}
         <button
-          onClick={() => onNavigate("home")}
+          onClick={() => navigate("/")}
           style={{
             display: "flex", alignItems: "center", gap: "8px",
             background: "none", border: "3px solid #000", padding: "8px 14px",
@@ -280,7 +285,7 @@ export function StatusPesananPage({ onNavigate }: StatusPesananPageProps) {
                       <Package size={12} /> VARIAN: TOPLES 500GR
                     </div>
                     <button
-                      onClick={() => onNavigate("menu")}
+                      onClick={() => navigate("/menu")}
                       style={{
                         float: "right",
                         backgroundColor: "#FF8C00", border: "3px solid #000",
@@ -602,7 +607,7 @@ export function StatusPesananPage({ onNavigate }: StatusPesananPageProps) {
                 {/* Bottom Actions */}
                 <div style={{ display: "flex", gap: "10px" }}>
                   <button
-                    onClick={() => onNavigate("home")}
+                    onClick={() => navigate("/")}
                     style={{
                       flex: 1, border: "3px solid #000", backgroundColor: "#FDFBF7",
                       boxShadow: "4px 4px 0px #000", padding: "12px",
@@ -614,7 +619,7 @@ export function StatusPesananPage({ onNavigate }: StatusPesananPageProps) {
                     <MessageCircle size={14} /> BANTUAN
                   </button>
                   <button
-                    onClick={() => onNavigate("menu")}
+                    onClick={() => navigate("/menu")}
                     style={{
                       flex: 1, border: "3px solid #000", backgroundColor: "#FFE000",
                       boxShadow: "4px 4px 0px #000", padding: "12px",
@@ -630,7 +635,7 @@ export function StatusPesananPage({ onNavigate }: StatusPesananPageProps) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Star, ShoppingCart, Heart, Shield, CheckCircle, Flame, Minus, Plus, ChevronRight } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-
-interface MenuPageProps {
-  onNavigate: (page: string) => void;
-}
+import { motion } from "motion/react";
+import { useNavigate } from "react-router";
+import { useCart } from "../contexts/CartContext";
 
 const MAIN_IMAGE = "/product-1.png";
 
@@ -24,12 +23,16 @@ const REVIEWS_DATA = [
   { id: 3, name: "DEWI KARTIKA", date: "1 April 2025", rating: 4, text: "Enak banget, fresh, aroma kacangnya harum. Kurang sedikit lebih renyah lagi tapi overall sangat memuaskan.", verified: true },
 ];
 
-export function MenuPage({ onNavigate }: MenuPageProps) {
+export function MenuPage() {
   const [activeThumb, setActiveThumb] = useState(0);
   const [activeTab, setActiveTab] = useState<"desc" | "reviews">("desc");
   const [qty, setQty] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  
   const PRICE = 90000;
 
   const formatRp = (n: number) => "Rp " + n.toLocaleString("id-ID");
@@ -48,7 +51,7 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
           to { transform: translateX(0); opacity: 1; }
         }
       `}</style>
-      <Navbar currentPage="menu" onNavigate={onNavigate} />
+      <Navbar />
 
       {/* Breadcrumb */}
       <div
@@ -68,7 +71,7 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
         ].map((crumb, i, arr) => (
           <div key={crumb.label} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             <button
-              onClick={() => crumb.page && onNavigate(crumb.page)}
+              onClick={() => crumb.page && navigate(crumb.page === "home" ? "/" : `/${crumb.page}`)}
               style={{
                 background: "none",
                 border: "none",
@@ -91,7 +94,11 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
       {/* ═══════════════════════════════════════════════════════
           MAIN PRODUCT SECTION
       ═══════════════════════════════════════════════════════ */}
-      <section
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
           maxWidth: "1440px",
           margin: "0 auto",
@@ -372,15 +379,14 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
             <div style={{ display: "flex", gap: "16px" }}>
               <button
                 onClick={() => {
-                  const newItem = {
+                  addToCart({
                     id: 1,
                     name: "PEYEK KACANG ORIGINAL",
                     variant: "500gr",
                     price: PRICE,
                     qty: qty,
                     image: MAIN_IMAGE,
-                  };
-                  localStorage.setItem("cartItems", JSON.stringify([newItem]));
+                  });
                   setShowToast(true);
                   setTimeout(() => setShowToast(false), 3000);
                 }}
@@ -442,16 +448,15 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
             {/* Order button */}
             <button
               onClick={() => {
-                const newItem = {
+                addToCart({
                   id: 1,
                   name: "PEYEK KACANG ORIGINAL",
                   variant: "500gr",
                   price: PRICE,
                   qty: qty,
                   image: MAIN_IMAGE,
-                };
-                localStorage.setItem("cartItems", JSON.stringify([newItem]));
-                onNavigate("verifikasi");
+                });
+                navigate("/verifikasi");
               }}
               style={{
                 width: "100%",
@@ -531,7 +536,7 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Toast Notification */}
       {showToast && (
@@ -564,7 +569,11 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
       {/* ═══════════════════════════════════════════════════════
           TABS: DESCRIPTION & REVIEWS
       ═══════════════════════════════════════════════════════ */}
-      <section
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
           maxWidth: "1440px",
           margin: "0 auto",
@@ -868,9 +877,9 @@ export function MenuPage({ onNavigate }: MenuPageProps) {
             </div>
           )}
         </div>
-      </section>
+      </motion.section>
 
-      <Footer onNavigate={onNavigate} />
+      <Footer />
     </div>
   );
 }
