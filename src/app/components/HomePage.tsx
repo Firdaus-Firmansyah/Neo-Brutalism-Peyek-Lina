@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Plus, Star, ChevronDown, ChevronUp, Truck, Shield, Flame, Award, CheckCircle } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
@@ -19,7 +19,7 @@ const PRODUCTS = [
   {
     id: 2,
     name: "PEYEK TERI MEDAN",
-    price: 100000,
+    price: 95000,
     badge: "GURIH",
     badgeColor: "#2E8B57",
     image: "/product-2.png",
@@ -27,7 +27,7 @@ const PRODUCTS = [
   {
     id: 3,
     name: "PEYEK REBON",
-    price: 95000,
+    price: 85000,
     badge: "RENYAH",
     badgeColor: "#FFD700",
     image: "/product-3.png",
@@ -35,7 +35,7 @@ const PRODUCTS = [
   {
     id: 4,
     name: "PEYEK KACANG IJO",
-    price: 95000,
+    price: 85000,
     badge: "BARU",
     badgeColor: "#FF8C00",
     image: "/product-4.png",
@@ -116,7 +116,7 @@ export function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   
   const navigate = useNavigate();
-  const { cartCount } = useCart();
+  const { } = useCart();
 
   const formatRp = (n: number) => "Rp " + n.toLocaleString("id-ID");
 

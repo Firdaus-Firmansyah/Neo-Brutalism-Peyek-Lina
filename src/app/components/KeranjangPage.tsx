@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+
 import { Trash2, Minus, Plus, ArrowLeft, ShoppingBag, Tag } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { ImageWithFallback } from "./figma/ImageWithFallback";

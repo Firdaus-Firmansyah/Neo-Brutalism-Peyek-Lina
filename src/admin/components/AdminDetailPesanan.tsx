@@ -1,18 +1,17 @@
 import { ArrowLeft, Truck, User, Phone, MapPin, CreditCard, Package } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
+import { useNavigate } from "react-router";
 import { MOCK_ORDERS, getOrderStatusStyle, formatRp, PEYEK_IMAGE } from "../types";
-import type { AdminPage, Order } from "../types";
+import type { Order } from "../types";
 
 interface AdminDetailPesananProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-  selectedInvoice?: string;
+  invoice?: string;
 }
 
 const STATUS_SEQUENCE: Order["status"][] = ["baru", "diproses", "dikirim", "selesai"];
 
-export function AdminDetailPesanan({ onNavigate, onLogout, selectedInvoice }: AdminDetailPesananProps) {
-  const order = MOCK_ORDERS.find((o) => o.invoice === selectedInvoice) ?? MOCK_ORDERS[0];
+export function AdminDetailPesanan({ invoice }: AdminDetailPesananProps) {
+  const navigate = useNavigate();
+  const order = MOCK_ORDERS.find((o) => o.invoice === invoice) ?? MOCK_ORDERS[0];
   const st = getOrderStatusStyle(order.status);
 
   const statusIdx = STATUS_SEQUENCE.indexOf(order.status as Order["status"]);
@@ -27,15 +26,9 @@ export function AdminDetailPesanan({ onNavigate, onLogout, selectedInvoice }: Ad
   ];
 
   return (
-    <AdminLayout
-      currentPage="detail-pesanan"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title="DETAIL PESANAN"
-      subtitle={`Invoice: ${order.invoice}`}
-    >
+    <>
       <button
-        onClick={() => onNavigate("pesanan")}
+        onClick={() => navigate("/admin/pesanan")}
         style={{
           display: "flex", alignItems: "center", gap: "8px",
           border: "3px solid #000", boxShadow: "4px 4px 0px #000",
@@ -234,6 +227,6 @@ export function AdminDetailPesanan({ onNavigate, onLogout, selectedInvoice }: Ad
           </div>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }

@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Phone, Zap, Truck, Copy, Eye, EyeOff, Save } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
-import type { AdminPage } from "../types";
 
-interface AdminIntegrasiProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-}
 
 type StatusBadge = "terhubung" | "belum_diset" | "aktif" | "nonaktif";
 
@@ -46,7 +40,7 @@ const inputStyle: React.CSSProperties = {
 
 const PROVIDERS = ["RajaOngkir Pro", "RajaOngkir Starter", "JNE Direct", "JT Express"];
 
-export function AdminIntegrasi({ onNavigate, onLogout }: AdminIntegrasiProps) {
+export function AdminIntegrasi() {
   const [waNumber, setWaNumber] = useState("");
   const [midtransKey, setMidtransKey] = useState("SB-Mid-server-xxxxxxxxxxxxxxxxxxxxxx");
   const [showKey, setShowKey] = useState(false);
@@ -91,13 +85,7 @@ export function AdminIntegrasi({ onNavigate, onLogout }: AdminIntegrasiProps) {
   );
 
   return (
-    <AdminLayout
-      currentPage="integrasi"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title="INTEGRASI SISTEM"
-      subtitle="Konfigurasi API Midtrans, WhatsApp, dan RajaOngkir."
-    >
+    <>
       {/* Status Overview Tabs */}
       <div style={{ display: "flex", gap: "12px", marginBottom: "28px", flexWrap: "wrap" }}>
         {[
@@ -347,6 +335,6 @@ export function AdminIntegrasi({ onNavigate, onLogout }: AdminIntegrasiProps) {
         <Save size={20} />
         {saved ? "✓ TERSIMPAN!" : "SIMPAN INTEGRASI"}
       </button>
-    </AdminLayout>
+    </>
   );
 }

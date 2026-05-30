@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router";
 import { HomePage } from "./components/HomePage";
 import { MenuPage } from "./components/MenuPage";
+import { ProductDetail } from "./components/ProductDetail";
 import { AboutPage } from "./components/AboutPage";
 import { KeranjangPage } from "./components/KeranjangPage";
 import { VerifikasiPage } from "./components/VerifikasiPage";
@@ -16,6 +17,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/menu" element={<MenuPage />} />
+          <Route path="/menu/:slug" element={<ProductDetail />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/keranjang" element={<KeranjangPage />} />
           <Route path="/verifikasi" element={<VerifikasiPage />} />

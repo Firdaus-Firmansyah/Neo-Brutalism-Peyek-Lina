@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard, Package, ShoppingCart, Archive,
   Tag, BarChart2, Plug, LogOut, ChevronLeft, ChevronRight,
@@ -6,8 +7,6 @@ import {
 import type { AdminPage } from "../types";
 
 interface AdminSidebarProps {
-  currentPage: AdminPage;
-  onNavigate: (page: AdminPage) => void;
   onLogout: () => void;
 }
 
@@ -24,22 +23,26 @@ const NAV_INSIGHTS: { key: AdminPage; label: string; icon: React.ReactNode }[] =
   { key: "integrasi", label: "INTEGRASI", icon: <Plug size={17} /> },
 ];
 
-// Pages that should highlight their parent nav
-const PAGE_PARENT: Partial<Record<AdminPage, AdminPage>> = {
-  "tambah-produk": "produk",
-  "detail-pesanan": "pesanan",
-};
-
-export function AdminSidebar({ currentPage, onNavigate, onLogout }: AdminSidebarProps) {
+export function AdminSidebar({ onLogout }: AdminSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const activePage = PAGE_PARENT[currentPage] ?? currentPage;
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const path = location.pathname;
+  let activePage = "dashboard";
+  if (path.includes("/admin/produk") || path.includes("/admin/tambah-produk")) activePage = "produk";
+  else if (path.includes("/admin/pesanan") || path.includes("/admin/detail-pesanan")) activePage = "pesanan";
+  else if (path.includes("/admin/inventaris")) activePage = "inventaris";
+  else if (path.includes("/admin/promo")) activePage = "promo";
+  else if (path.includes("/admin/laporan")) activePage = "laporan";
+  else if (path.includes("/admin/integrasi")) activePage = "integrasi";
 
   const navBtn = (key: AdminPage, label: string, icon: React.ReactNode) => {
     const active = activePage === key;
     return (
       <button
         key={key}
-        onClick={() => onNavigate(key)}
+        onClick={() => navigate(key === "dashboard" ? "/admin/dashboard" : `/admin/${key}`)}
         style={{
           display: "flex",
           alignItems: "center",

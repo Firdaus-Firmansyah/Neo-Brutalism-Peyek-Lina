@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Star, ShoppingCart, Heart, Shield, CheckCircle, Flame, Minus, Plus, ChevronRight } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { motion } from "motion/react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useCart } from "../contexts/CartContext";
+import { products } from "../../data/products";
 
 const MAIN_IMAGE = "/product-1.png";
 
@@ -878,6 +879,67 @@ export function MenuPage() {
           )}
         </div>
       </motion.section>
+
+      {/* ═══════════════════════════════════════════════════════
+          OTHER PRODUCTS
+      ═══════════════════════════════════════════════════════ */}
+      <section style={{ maxWidth: "1440px", margin: "0 auto", padding: "0 80px 120px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "40px", borderBottom: "4px solid #000", paddingBottom: "16px" }}>
+          <h2 style={{ fontFamily: "'Archivo Black', sans-serif", fontSize: "2.5rem", letterSpacing: "-0.03em", textTransform: "uppercase", margin: 0 }}>
+            PILIHAN PRODUK <span style={{ color: "#FF8C00" }}>LAINNYA</span>
+          </h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "32px" }}>
+          {products.filter(p => p.slug !== "peyek-kacang-original").map(product => (
+            <Link 
+              to={`/menu/${product.slug}`} 
+              key={product.id}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                border: "4px solid #000",
+                boxShadow: "8px 8px 0px #000",
+                backgroundColor: "#fff",
+                textDecoration: "none",
+                color: "inherit",
+                transition: "transform 0.15s, box-shadow 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translate(-2px, -2px)";
+                e.currentTarget.style.boxShadow = "10px 10px 0px #000";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translate(0, 0)";
+                e.currentTarget.style.boxShadow = "8px 8px 0px #000";
+              }}
+            >
+              <div style={{ borderBottom: "4px solid #000", aspectRatio: "1", overflow: "hidden" }}>
+                <ImageWithFallback src={product.mainImage} alt={product.namePart1} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
+                <div style={{ display: "inline-block", backgroundColor: "#FF8C00", border: "2px solid #000", padding: "4px 8px", alignSelf: "flex-start", marginBottom: "12px", fontWeight: 800, fontSize: "0.65rem", letterSpacing: "0.1em" }}>
+                  {product.badgeText.substring(0, 20)}{product.badgeText.length > 20 ? '...' : ''}
+                </div>
+                <h3 style={{ fontFamily: "'Archivo Black', sans-serif", fontSize: "1.2rem", lineHeight: 1.1, marginBottom: "8px", textTransform: "uppercase" }}>
+                  {product.namePart1} <span style={{ color: "#FF8C00" }}>{product.namePart2}</span>
+                </h3>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "16px" }}>
+                  <Star size={14} fill="#FF8C00" color="#FF8C00" />
+                  <span style={{ fontWeight: 800, fontSize: "0.8rem" }}>{product.rating}</span>
+                </div>
+                <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                  <p style={{ fontFamily: "'Archivo Black', sans-serif", fontSize: "1.4rem" }}>
+                    {formatRp(product.price)}
+                  </p>
+                  <div style={{ backgroundColor: "#000", width: "40px", height: "40px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <ChevronRight color="#fff" size={24} />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <Footer />
     </div>

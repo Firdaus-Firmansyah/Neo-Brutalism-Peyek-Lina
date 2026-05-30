@@ -17,10 +17,11 @@ import { motion } from "motion/react";
 
 import { useNavigate } from "react-router";
 import { useCart } from "../contexts/CartContext";
+import { useMutation } from "@tanstack/react-query";
 
 type PaymentMethod = "QRIS" | "TRANSFER_BANK" | "E_WALLET";
 
-const PRODUCT_PRICE = 90000;
+
 const SHIPPING = 15000;
 const DISCOUNT_CODES: Record<string, number> = {
   PEYEK10: 18000,
@@ -40,7 +41,7 @@ export function DetailPemesananPage() {
     whatsapp: "",
     alamat: "",
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted] = useState(false);
 
   const subtotal = items.reduce((sum: number, item: any) => sum + item.price * item.qty, 0);
   const discount = appliedPromo ? DISCOUNT_CODES[appliedPromo] : 0;
@@ -59,10 +60,30 @@ export function DetailPemesananPage() {
     }
   };
 
+  const checkoutMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      // Mock API endpoint for checkout
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      console.log("Checkout payload sent to /api/checkout:", payload);
+      return payload;
+    },
+    onSuccess: () => {
+      navigate("/konfirmasi");
+    },
+    onError: () => {
+      alert("Terjadi kesalahan saat memproses pesanan.");
+    }
+  });
+
   const handleSubmit = () => {
     if (formData.nama && formData.whatsapp && formData.alamat) {
-      localStorage.setItem("hasOrder", "true");
-      navigate("/konfirmasi");
+      checkoutMutation.mutate({
+        ...formData,
+        paymentMethod,
+        promoCode: appliedPromo,
+        items,
+        total
+      });
     } else {
       alert("⚠️ Harap lengkapi Nama, WhatsApp, dan Alamat Pengiriman!");
     }
@@ -694,33 +715,42 @@ export function DetailPemesananPage() {
                 {/* CTA Button */}
                 <button
                   onClick={handleSubmit}
+                  disabled={checkoutMutation.isPending}
                   style={{
                     width: "100%",
-                    backgroundColor: "#2E8B57",
+                    backgroundColor: checkoutMutation.isPending ? "#888" : "#2E8B57",
                     border: "4px solid #000",
-                    boxShadow: "8px 8px 0px #000",
+                    boxShadow: checkoutMutation.isPending ? "none" : "8px 8px 0px #000",
                     padding: "24px",
                     fontFamily: "'Archivo Black', sans-serif",
                     fontSize: "1.3rem",
                     letterSpacing: "0.06em",
-                    cursor: "pointer",
+                    cursor: checkoutMutation.isPending ? "not-allowed" : "pointer",
                     textTransform: "uppercase",
                     color: "#FDFBF7",
                     transition: "transform 0.1s, box-shadow 0.1s",
                     lineHeight: 1.2,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translate(-3px, -3px)";
-                    e.currentTarget.style.boxShadow = "11px 11px 0px #000";
+                    if (!checkoutMutation.isPending) {
+                      e.currentTarget.style.transform = "translate(-3px, -3px)";
+                      e.currentTarget.style.boxShadow = "11px 11px 0px #000";
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translate(0, 0)";
-                    e.currentTarget.style.boxShadow = "8px 8px 0px #000";
+                    if (!checkoutMutation.isPending) {
+                      e.currentTarget.style.transform = "translate(0, 0)";
+                      e.currentTarget.style.boxShadow = "8px 8px 0px #000";
+                    }
                   }}
                 >
-                  KONFIRMASI
-                  <br />
-                  PESANAN ✓
+                  {checkoutMutation.isPending ? "MEMPROSES..." : (
+                    <>
+                      KONFIRMASI
+                      <br />
+                      PESANAN ✓
+                    </>
+                  )}
                 </button>
 
                 {/* Security Note */}

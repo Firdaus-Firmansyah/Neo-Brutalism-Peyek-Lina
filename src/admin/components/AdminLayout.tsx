@@ -1,18 +1,9 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation, Outlet, useNavigate } from "react-router";
 import { Bell, User, CheckCircle2, ShoppingBag, AlertTriangle } from "lucide-react";
 import { AdminSidebar } from "./AdminSidebar";
-import type { AdminPage } from "../types";
 import { motion } from "motion/react";
-
-interface AdminLayoutProps {
-  currentPage: AdminPage;
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-  title: string;
-  subtitle: string;
-  notifCount?: number;
-  children: React.ReactNode;
-}
+import { removeToken } from "../../utils/auth";
 
 const MOCK_NOTIFICATIONS = [
   { id: 1, type: "order", title: "Pesanan Baru #1029", desc: "Peyek Kacang Original (2x) - Rp 50.000", time: "Baru saja", unread: true },
@@ -21,10 +12,36 @@ const MOCK_NOTIFICATIONS = [
   { id: 4, type: "order", title: "Pesanan Selesai #1025", desc: "Paket telah diterima pelanggan", time: "Kemarin", unread: false },
 ];
 
-export function AdminLayout({
-  currentPage, onNavigate, onLogout,
-  title, subtitle, children,
-}: AdminLayoutProps) {
+export function AdminLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const path = location.pathname;
+
+  let title = "DASHBOARD";
+  let subtitle = "Kelola operasi toko peyek secara real-time.";
+
+  if (path.includes("/admin/produk")) {
+    title = "PRODUK";
+    subtitle = "Kelola katalog peyek dan atur visibilitas.";
+  } else if (path.includes("/admin/tambah-produk") || path.includes("/admin/edit-produk")) {
+    title = "TAMBAH/EDIT PRODUK";
+    subtitle = "Masukkan detail produk peyek baru.";
+  } else if (path.includes("/admin/pesanan") || path.includes("/admin/detail-pesanan")) {
+    title = "PESANAN";
+    subtitle = "Pantau dan proses pesanan masuk.";
+  } else if (path.includes("/admin/inventaris")) {
+    title = "INVENTARIS";
+    subtitle = "Pantau stok bahan baku dan produk jadi.";
+  } else if (path.includes("/admin/promo")) {
+    title = "PROMO & DISKON";
+    subtitle = "Kelola kampanye marketing dan kode voucher.";
+  } else if (path.includes("/admin/laporan")) {
+    title = "LAPORAN & ANALITIK";
+    subtitle = "Pantau performa penjualan dan tren pelanggan.";
+  } else if (path.includes("/admin/integrasi")) {
+    title = "INTEGRASI";
+    subtitle = "Hubungkan toko dengan layanan pihak ketiga.";
+  }
   const [showNotif, setShowNotif] = useState(false);
   const [notifs, setNotifs] = useState(MOCK_NOTIFICATIONS);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -44,9 +61,14 @@ export function AdminLayout({
   const markAllRead = () => {
     setNotifs(notifs.map(n => ({ ...n, unread: false })));
   };
+  const handleLogout = () => {
+    removeToken();
+    navigate("/admin/login");
+  };
+
   return (
     <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#FDFBF7", fontFamily: "'Space Grotesk', sans-serif" }}>
-      <AdminSidebar currentPage={currentPage} onNavigate={onNavigate} onLogout={onLogout} />
+      <AdminSidebar onLogout={handleLogout} />
 
       {/* Main */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
@@ -149,9 +171,9 @@ export function AdminLayout({
                           setNotifs(notifs.map(x => x.id === n.id ? { ...x, unread: false } : x));
                           setShowNotif(false);
                           if (n.type === 'order' || n.type === 'payment') {
-                            onNavigate('pesanan');
+                            navigate('/admin/pesanan');
                           } else if (n.type === 'alert') {
-                            onNavigate('inventaris');
+                            navigate('/admin/inventaris');
                           }
                         }}
                         style={{
@@ -222,12 +244,12 @@ export function AdminLayout({
         {/* Content */}
         <main style={{ flex: 1, padding: "32px 36px" }}>
           <motion.div
-            key={currentPage}
+            key={location.pathname}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            {children}
+            <Outlet />
           </motion.div>
         </main>
       </div>

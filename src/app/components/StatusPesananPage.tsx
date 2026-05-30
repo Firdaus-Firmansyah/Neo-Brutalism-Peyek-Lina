@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   ArrowLeft, Package, Truck, CheckCircle2, RefreshCw,
   Copy, MessageCircle, ShoppingBag, MapPin, Phone, User,

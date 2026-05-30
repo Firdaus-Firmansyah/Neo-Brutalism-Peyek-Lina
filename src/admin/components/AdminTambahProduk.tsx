@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
-import type { AdminPage } from "../types";
-
-interface AdminTambahProdukProps {
-  currentPage?: AdminPage;
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-}
+import { useNavigate, useLocation } from "react-router";
 
 interface Varian {
   id: string;
@@ -41,7 +34,10 @@ const labelStyle: React.CSSProperties = {
   marginBottom: "7px",
 };
 
-export function AdminTambahProduk({ currentPage = "tambah-produk", onNavigate, onLogout }: AdminTambahProdukProps) {
+export function AdminTambahProduk() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPage = location.pathname.includes("edit-produk") ? "edit-produk" : "tambah-produk";
   const [nama, setNama] = useState("");
   const [slug, setSlug] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
@@ -83,22 +79,16 @@ export function AdminTambahProduk({ currentPage = "tambah-produk", onNavigate, o
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
-      onNavigate("produk");
+      navigate("/admin/produk");
     }, 1200);
   };
 
   return (
-    <AdminLayout
-      currentPage={currentPage}
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title={currentPage === "edit-produk" ? "EDIT PRODUK" : "TAMBAH PRODUK"}
-      subtitle={currentPage === "edit-produk" ? "Ubah detail produk dan varian yang sudah ada." : "Isi detail produk dan varian untuk ditambahkan ke katalog."}
-    >
+    <>
       {/* Back button in header */}
       <div style={{ marginBottom: "28px" }}>
         <button
-          onClick={() => onNavigate("produk")}
+          onClick={() => navigate("/admin/produk")}
           style={{
             display: "flex", alignItems: "center", gap: "8px",
             border: "3px solid #000", boxShadow: "4px 4px 0px #000",
@@ -361,7 +351,7 @@ export function AdminTambahProduk({ currentPage = "tambah-produk", onNavigate, o
           {saved ? "✓ TERSIMPAN!" : currentPage === "edit-produk" ? "SIMPAN PERUBAHAN" : "SIMPAN PRODUK"}
         </button>
         <button
-          onClick={() => onNavigate("produk")}
+          onClick={() => navigate("/admin/produk")}
           style={{
             backgroundColor: "#fff",
             border: "4px solid #000",
@@ -377,6 +367,6 @@ export function AdminTambahProduk({ currentPage = "tambah-produk", onNavigate, o
           BATAL
         </button>
       </div>
-    </AdminLayout>
+    </>
   );
 }

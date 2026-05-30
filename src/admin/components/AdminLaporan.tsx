@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Download, Calendar } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
-import type { AdminPage } from "../types";
 
-interface AdminLaporanProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-}
 
 type Period = "mei" | "apr" | "q1" | "6bulan" | "1tahun";
 
@@ -98,7 +92,7 @@ const PERIOD_BUTTONS: { key: Period; label: string }[] = [
   { key: "1tahun", label: "1 TAHUN" },
 ];
 
-export function AdminLaporan({ onNavigate, onLogout }: AdminLaporanProps) {
+export function AdminLaporan() {
   const [period, setPeriod] = useState<Period>("mei");
   const data = PERIOD_DATA[period];
   const maxBar = Math.max(...data.bars.map((b) => b.value));
@@ -111,13 +105,7 @@ export function AdminLaporan({ onNavigate, onLogout }: AdminLaporanProps) {
   ];
 
   return (
-    <AdminLayout
-      currentPage="laporan"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title="LAPORAN PENJUALAN"
-      subtitle="Analitik dan ringkasan performa toko secara komprehensif."
-    >
+    <>
       {/* Period Filter */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "28px", flexWrap: "wrap" }}>
         <Calendar size={18} color="#888" />
@@ -297,6 +285,6 @@ export function AdminLaporan({ onNavigate, onLogout }: AdminLaporanProps) {
           <Download size={18} /> DOWNLOAD CSV
         </button>
       </div>
-    </AdminLayout>
+    </>
   );
 }

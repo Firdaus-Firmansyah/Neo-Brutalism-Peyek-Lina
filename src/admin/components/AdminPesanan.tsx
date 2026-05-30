@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { SlidersHorizontal, ExternalLink } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
+import { useNavigate } from "react-router";
 import { MOCK_ORDERS, getOrderStatusStyle, formatRp } from "../types";
-import type { AdminPage, Order } from "../types";
-
-interface AdminPesananProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-  onSelectOrder: (invoice: string) => void;
-}
+import type { Order } from "../types";
 
 type StatusFilter = "semua" | Order["status"];
 
@@ -20,7 +14,8 @@ const STATUS_FILTERS: { key: StatusFilter; label: string }[] = [
   { key: "selesai", label: "SELESAI" },
 ];
 
-export function AdminPesanan({ onNavigate, onLogout, onSelectOrder }: AdminPesananProps) {
+export function AdminPesanan() {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<StatusFilter>("semua");
   const [showFilter, setShowFilter] = useState(false);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
@@ -44,13 +39,7 @@ export function AdminPesanan({ onNavigate, onLogout, onSelectOrder }: AdminPesan
   };
 
   return (
-    <AdminLayout
-      currentPage="pesanan"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title="PESANAN"
-      subtitle="Monitor dan kelola semua pesanan masuk secara real-time."
-    >
+    <>
       {/* Toolbar */}
       <div style={{ display: "flex", gap: "12px", marginBottom: "20px", alignItems: "center", flexWrap: "wrap" }}>
         {/* Status Dropdown */}
@@ -215,7 +204,7 @@ export function AdminPesanan({ onNavigate, onLogout, onSelectOrder }: AdminPesan
                   </td>
                   <td style={{ padding: "14px 16px" }}>
                     <button
-                      onClick={() => { onSelectOrder(order.invoice); onNavigate("detail-pesanan"); }}
+                      onClick={() => navigate("/admin/detail-pesanan")}
                       style={{
                         display: "flex", alignItems: "center", gap: "5px",
                         backgroundColor: "#FFE000", border: "3px solid #000",
@@ -232,6 +221,6 @@ export function AdminPesanan({ onNavigate, onLogout, onSelectOrder }: AdminPesan
           </tbody>
         </table>
       </div>
-    </AdminLayout>
+    </>
   );
 }

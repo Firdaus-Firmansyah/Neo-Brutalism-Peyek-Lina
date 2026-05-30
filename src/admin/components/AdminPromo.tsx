@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { Tag, Pencil, X, Plus } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
 import { MOCK_PROMOS } from "../types";
-import type { AdminPage, Promo } from "../types";
-
-interface AdminPromoProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-}
+import type { Promo } from "../types";
 
 type FilterTab = "semua" | "aktif" | "nonaktif";
 
@@ -17,14 +11,13 @@ const TYPE_LABELS: Record<Promo["type"], string> = {
   persentase: "PERSENTASE",
 };
 
-export function AdminPromo({ onNavigate, onLogout }: AdminPromoProps) {
+export function AdminPromo() {
   const [promos, setPromos] = useState<Promo[]>(MOCK_PROMOS);
   const [filter, setFilter] = useState<FilterTab>("semua");
   const [editingPromo, setEditingPromo] = useState<Promo | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
   const filtered = filter === "semua" ? promos : promos.filter((p) => (filter === "aktif" ? p.active : !p.active));
-  const activeCount = promos.filter((p) => p.active).length;
 
   const toggleActive = (id: string) => {
     setPromos((prev) => prev.map((p) => (p.id === id ? { ...p, active: !p.active } : p)));
@@ -75,14 +68,7 @@ export function AdminPromo({ onNavigate, onLogout }: AdminPromoProps) {
   ];
 
   return (
-    <AdminLayout
-      currentPage="promo"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title={`PROMO AKTIF`}
-      subtitle="Kelola diskon, voucher, dan kampanye promosi toko."
-      notifCount={activeCount}
-    >
+    <>
       {/* Toolbar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", flexWrap: "wrap", gap: "12px" }}>
         <div style={{ display: "flex", gap: "0" }}>
@@ -398,6 +384,6 @@ export function AdminPromo({ onNavigate, onLogout }: AdminPromoProps) {
           </div>
         </div>
       )}
-    </AdminLayout>
+    </>
   );
 }

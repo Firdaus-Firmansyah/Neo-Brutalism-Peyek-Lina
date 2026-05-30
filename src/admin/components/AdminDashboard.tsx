@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { TrendingUp, ShoppingCart, Package, AlertTriangle, Tag, ExternalLink, X } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
+import { useNavigate } from "react-router";
 import { MOCK_ORDERS, getOrderStatusStyle, formatRp } from "../types";
-import type { AdminPage } from "../types";
-
-interface AdminDashboardProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-}
 
 const STATS = [
   { label: "REVENUE", value: "Rp 1,24jt", sub: "↗ pemasukan terpantau", icon: <TrendingUp size={22} />, bg: "#fff" },
@@ -17,18 +11,13 @@ const STATS = [
   { label: "PROMO AKTIF", value: "2", sub: "↗ kampanye berjalan", icon: <Tag size={22} />, bg: "#B3D9FF" },
 ];
 
-export function AdminDashboard({ onNavigate, onLogout }: AdminDashboardProps) {
+export function AdminDashboard() {
   const [showBanner, setShowBanner] = useState(true);
+  const navigate = useNavigate();
   const recentOrders = MOCK_ORDERS.slice(0, 5);
 
   return (
-    <AdminLayout
-      currentPage="dashboard"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title="DASHBOARD"
-      subtitle="Kelola operasi toko peyek secara real-time."
-    >
+    <>
       {/* Success Banner */}
       {showBanner && (
         <div style={{
@@ -157,7 +146,7 @@ export function AdminDashboard({ onNavigate, onLogout }: AdminDashboardProps) {
             </span>
           </div>
           <button
-            onClick={() => onNavigate("pesanan")}
+            onClick={() => navigate("/admin/pesanan")}
             style={{
               display: "flex", alignItems: "center", gap: "6px",
               backgroundColor: "#FF8C00",
@@ -231,6 +220,6 @@ export function AdminDashboard({ onNavigate, onLogout }: AdminDashboardProps) {
           </tbody>
         </table>
       </div>
-    </AdminLayout>
+    </>
   );
 }

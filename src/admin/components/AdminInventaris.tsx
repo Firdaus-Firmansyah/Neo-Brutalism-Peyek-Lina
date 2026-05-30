@@ -1,15 +1,9 @@
 import { useState } from "react";
 import { Search, RefreshCw, Pencil, Check, X } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
 import { MOCK_INVENTORY, getStockStatus } from "../types";
-import type { AdminPage, InventoryItem } from "../types";
+import type { InventoryItem } from "../types";
 
-interface AdminInventarisProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-}
-
-export function AdminInventaris({ onNavigate, onLogout }: AdminInventarisProps) {
+export function AdminInventaris() {
   const [search, setSearch] = useState("");
   const [inventory, setInventory] = useState<InventoryItem[]>(MOCK_INVENTORY);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -61,13 +55,7 @@ export function AdminInventaris({ onNavigate, onLogout }: AdminInventarisProps) 
   ];
 
   return (
-    <AdminLayout
-      currentPage="inventaris"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title="INVENTARIS"
-      subtitle="Kelola operasi toko peyek secara real-time."
-    >
+    <>
       {/* Success Notification */}
       {showNotif && (
         <div style={{
@@ -302,6 +290,6 @@ export function AdminInventaris({ onNavigate, onLogout }: AdminInventarisProps) 
           </tbody>
         </table>
       </div>
-    </AdminLayout>
+    </>
   );
 }

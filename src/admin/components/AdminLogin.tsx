@@ -1,30 +1,31 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "motion/react";
+import { useNavigate } from "react-router";
+import { loginApi, setToken } from "../../utils/auth";
 
-interface AdminLoginProps {
-  onLogin: () => void;
-}
-
-export function AdminLogin({ onLogin }: AdminLoginProps) {
+export function AdminLogin() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    setTimeout(() => {
-      if (email === "admin@business.com" && password === "admin123") {
-        onLogin();
-      } else {
-        setError("Email atau password salah!");
-        setLoading(false);
-      }
-    }, 800);
+
+    try {
+      const token = await loginApi(email, password);
+      setToken(token);
+      navigate("/admin/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Login gagal");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputStyle: React.CSSProperties = {

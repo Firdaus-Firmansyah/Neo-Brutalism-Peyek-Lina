@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { Search, SlidersHorizontal, Plus, Pencil, Trash2 } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
+import { useNavigate } from "react-router";
 import { MOCK_PRODUCTS, formatRp } from "../types";
-import type { AdminPage, Product } from "../types";
+import type { Product } from "../types";
 
-interface AdminProdukProps {
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
-}
-
-export function AdminProduk({ onNavigate, onLogout }: AdminProdukProps) {
+export function AdminProduk() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
 
@@ -34,13 +30,7 @@ export function AdminProduk({ onNavigate, onLogout }: AdminProdukProps) {
   };
 
   return (
-    <AdminLayout
-      currentPage="produk"
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title="PRODUK"
-      subtitle="Kelola katalog produk peyek secara real-time."
-    >
+    <>
       <style>{`
         .neo-btn-hover {
           transition: transform 0.1s, box-shadow 0.1s;
@@ -89,7 +79,7 @@ export function AdminProduk({ onNavigate, onLogout }: AdminProdukProps) {
 
         <button
           className="neo-btn-hover"
-          onClick={() => onNavigate("tambah-produk")}
+          onClick={() => navigate("/admin/tambah-produk")}
           style={{
           display: "flex", alignItems: "center", gap: "8px",
           border: "3px solid #000", boxShadow: "3px 3px 0px #000",
@@ -225,7 +215,7 @@ export function AdminProduk({ onNavigate, onLogout }: AdminProdukProps) {
                   <div style={{ display: "flex", gap: "8px" }}>
                     <button 
                       className="neo-btn-hover"
-                      onClick={() => onNavigate("edit-produk")}
+                      onClick={() => navigate("/admin/edit-produk")}
                       style={{
                       display: "flex", alignItems: "center", gap: "5px",
                       backgroundColor: "#FFE000", border: "3px solid #000",
@@ -253,6 +243,6 @@ export function AdminProduk({ onNavigate, onLogout }: AdminProdukProps) {
           </tbody>
         </table>
       </div>
-    </AdminLayout>
+    </>
   );
 }

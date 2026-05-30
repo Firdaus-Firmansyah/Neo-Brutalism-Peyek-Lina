@@ -1,27 +1,15 @@
 import { Construction } from "lucide-react";
-import { AdminLayout } from "./AdminLayout";
-import type { AdminPage } from "../types";
-
 interface PlaceholderPageProps {
   title: string;
   subtitle: string;
-  currentPage: AdminPage;
-  onNavigate: (page: AdminPage) => void;
-  onLogout: () => void;
   color?: string;
 }
 
 export function AdminPlaceholderPage({
-  title, subtitle, currentPage, onNavigate, onLogout, color = "#FFE000",
+  title, subtitle, color = "#FFE000",
 }: PlaceholderPageProps) {
   return (
-    <AdminLayout
-      currentPage={currentPage}
-      onNavigate={onNavigate}
-      onLogout={onLogout}
-      title={title}
-      subtitle={subtitle}
-    >
+    <>
       <div style={{
         display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
@@ -43,13 +31,13 @@ export function AdminPlaceholderPage({
             textTransform: "uppercase",
             marginBottom: "8px",
           }}>
-            SEGERA HADIR
+            {title}
           </p>
           <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#333" }}>
-            Halaman ini sedang dalam pengembangan
+            {subtitle}
           </p>
         </div>
       </div>
-    </AdminLayout>
+    </>
   );
 }
