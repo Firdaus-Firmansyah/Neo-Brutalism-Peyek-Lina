@@ -36,4 +36,17 @@ export default defineConfig({
 
   // Allow /admin path to be served by the SPA
   appType: 'spa',
+
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
+  }
 })
